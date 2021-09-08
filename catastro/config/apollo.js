@@ -1,14 +1,14 @@
-import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client';
-import fetch from 'node-fetch';
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import fetch from "node-fetch";
 
 const client = new ApolloClient({
-    connectToDevTools: true,
-    cache : new InMemoryCache(),
-    link: new HttpLink({
-        uri : 'http://localhost:5000/',
-        fetch
-    })
-
+  connectToDevTools: true,
+  cache: new InMemoryCache(),
+  link: new HttpLink({
+    uri: "http://localhost:5000/",
+    fetch,
+    
+  }),
 });
 
 export default client;
