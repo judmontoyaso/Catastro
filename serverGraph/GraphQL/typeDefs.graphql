@@ -1,0 +1,165 @@
+type Query {
+  getPredioDetails: [Predio]
+  getPropietarioDetails: [Propietario]
+  getPersonaNaturalDetails: [PersonaNatural]
+  getPersonaJuridicaDetails: [PersonaJuridica]
+  getConstruccionesDetails: [Construcciones]
+  getTerrenosDetails: [Terrenos]
+  getPredio(id_predio: ID!): Predio
+  getPropietario(id_propietario: ID!): Propietario
+  getPersonaNatural(id_persona_natural: ID!): PersonaNatural
+  getPersonaJuridica(nit_persona_juridica: ID!): PersonaJuridica
+  getConstruccion(id_construccion: ID!): Construcciones
+  getTerreno(id_terreno: ID!): Terrenos
+  
+}
+
+type Predio {
+  id_predio: ID!
+  nombre_predio: String
+  departamento_predio: String
+  municipio_predio: String
+  avaluo_predio: Float
+  id_terreno: ID
+  propietario: Propietario
+}
+
+type Propietario {
+  id_propietario: ID!
+  id_predio: ID
+  direccion_propietario: String
+  telefono_propietario: ID
+  tipo_propietario: String
+  correo_propietario: String
+  predio: Predio
+}
+
+type PersonaNatural {
+  id_persona_natural: ID!
+  tipo_id: String!
+  nombre: String!
+  apellido: String!
+}
+
+type PersonaJuridica {
+  nit_persona_juridica: ID!
+  razon_social: String!
+}
+
+type Construcciones {
+
+  id_predio: ID!
+  id_construccion: String!
+  numero_pisos_construccion: Int
+  area_total_construccion: Int
+  tipo_construccion: String
+  direccion_construccion: String
+}
+type Terrenos {
+
+  id_predio: ID!
+  id_terreno: String!
+  area_total_terreno: Int
+  valor_comercial_terreno: Int
+  fuente_hidrica_terreno: String
+  tipo_terreno: String
+  tiene_construccion_terreno: String
+}
+
+input PredioInput {
+  id_predio: ID!
+  nombre_predio: String!
+  departamento_predio: String!
+  municipio_predio: String!
+  avaluo_predio: Float!
+  id_terreno: ID
+}
+
+input PropietarioInput {
+  id_propietario: ID!
+  id_predio: ID
+  direccion_propietario: String
+  telefono_propietario: ID
+  tipo_propietario: String
+  correo_propietario: String
+}
+
+input ConstruccionInput {
+  id_predio: ID!
+  id_construccion: String!
+  numero_pisos_construccion: Int
+  area_total_construccion: Int
+  tipo_construccion: String
+  direccion_construccion: String
+}
+
+input TerrenoInput {
+  id_predio: ID!
+  id_terreno: String!
+  area_total_terreno: Int
+  valor_comercial_terreno: Int
+  fuente_hidrica_terreno: String
+  tipo_terreno: String
+  tiene_construccion_terreno: String
+}
+
+type Mutation {
+
+  createPredio(input: PredioInput): Predio
+
+  updatePredio(
+    id_predio: ID!
+    nombre_predio: String
+    departamento_predio: String
+    municipio_predio: String
+    avaluo_predio: Float
+    id_terreno: ID
+  ): String
+
+  deletePredio(id_predio: ID!): String
+
+  createPropietario(input: PropietarioInput): Propietario
+
+  updatePropietario(
+    id_propietario: ID!
+    id_predio: ID
+    direccion_propietario: String
+    telefono_propietario: ID
+    tipo_propietario: String
+    correo_propietario: String
+  ): String
+
+  deletePropietario(id_propietario: ID!): String
+
+  createConstruccion(input: ConstruccionInput): Construcciones
+
+  updateConstrucciones(
+    id_predio: ID!
+    id_construccion: String!
+    numero_pisos_construccion: Int
+    area_total_construccion: Int
+    tipo_construccion: String
+    direccion_construccion: String
+  ): String
+
+  deleteConstrucciones(id_construccion: ID!): String
+
+  createTerreno(input: TerrenoInput): Terrenos
+
+  updateTerrenos(
+    id_predio: ID!
+    id_terreno: String!
+    area_total_terreno: Int
+    valor_comercial_terreno: Int
+    fuente_hidrica_terreno: String
+    tipo_terreno: String
+    tiene_construccion_terreno: String
+    ): String
+
+  deleteTerreno(id_terreno: ID!): String
+
+
+
+
+
+}
