@@ -19,6 +19,7 @@ const construcciones = () => {
   //consultar predios
 
   const { data, loading, error } = useQuery(OBTENER_CONSTRUCCIONES);
+  if (loading) return "Cargando....";
   console.log(data);
   console.log(loading);
   console.log(error);
@@ -50,7 +51,8 @@ const construcciones = () => {
           <tbody className="bg-white">
             {
               //para iterar sobre la base de datos
-              /* {data.getConstruccionesDetails.map( construcciones => (
+            }
+              {data.getConstruccionesDetails.map( construcciones => (
               <tr key={construcciones.id_construcciones}>
                 <td className="border px-4 py-2">{construcciones.id_predio}</td>
                 <td className="border px-4 py-2">{construcciones.id_construccion}</td>
@@ -58,8 +60,8 @@ const construcciones = () => {
                 <td className="border px-4 py-2">{construcciones.area_total_construccion}</td>
                 <td className="border px-4 py-2">{construcciones.direccion_construccion}</td>
                 </tr>
-            ))} */
-            }
+            ))}
+            
           </tbody>
         </table>
       </Layout>

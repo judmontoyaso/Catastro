@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
 
-
 const NUEVO_PREDIO = gql`
   mutation Mutation($createPredioInput: PredioInput) {
     createPredio(input: $createPredioInput) {
@@ -20,8 +19,6 @@ const NUEVO_PREDIO = gql`
 
 const NuevoPredio = () => {
   //mutacion para crear nuevos predios
-
-  
 
   const [createPredio] = useMutation(NUEVO_PREDIO);
 
@@ -63,15 +60,15 @@ const NuevoPredio = () => {
       try {
         const { data } = await createPredio({
           variables: {
-            input: {
+            createPredioInput: {
               id_predio,
               nombre_predio,
               departamento_predio,
               municipio_predio,
               avaluo_predio,
               id_terreno,
-            }
-          }
+            },
+          },
         });
       } catch (error) {
         console.log(error);
@@ -79,6 +76,7 @@ const NuevoPredio = () => {
 
       console.log("enviando");
       console.log(valores);
+      console.log(error);
     },
   });
 

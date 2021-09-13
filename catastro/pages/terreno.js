@@ -21,6 +21,7 @@ const terreno = () => {
   //consultar predios
 
   const { data, loading, error } = useQuery(OBTENER_TERRENOS);
+  if (loading) return "Cargando....";
   console.log(data);
   console.log(loading);
   console.log(error);
@@ -51,8 +52,9 @@ const terreno = () => {
 
           <tbody className="bg-white">
             {
-              //para iterar sobre la base de datos, pero no me lee la funcion getTerrenosDetails
-              /* {data.getTerrenosDetails.map( terreno => (
+              //para iterar sobre la base de datos, pero no me lee la funcion getTerrenosDetails 
+            }
+              {data.getTerrenosDetails.map( terreno => (
               <tr key={terreno.id_terreno}>
                 <td className="border px-4 py-2">{terreno.id_predio}</td>
                 <td className="border px-4 py-2">{terreno.area_total_terreno}</td>
@@ -61,8 +63,8 @@ const terreno = () => {
                 <td className="border px-4 py-2">{terreno.tipo_terreno}</td>
                 <td className="border px-4 py-2">{terreno.tiene_construccion_terreno}</td>
                 </tr>
-            ))} */
-            }
+            ))} 
+            
           </tbody>
         </table>
       </Layout>
