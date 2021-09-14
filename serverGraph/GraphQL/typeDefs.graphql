@@ -71,7 +71,7 @@ input PredioInput {
   nombre_predio: String!
   departamento_predio: String!
   municipio_predio: String!
-  avaluo_predio: Float!
+  avaluo_predio: ID!
   id_terreno: ID
 }
 
