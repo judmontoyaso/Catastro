@@ -29,8 +29,8 @@ const NuevoPredio = () => {
       nombre_predio: "",
       departamento_predio: "",
       municipio_predio: "",
-      avaluo_predio: "",
-      id_terreno: "",
+      avaluo_predio: 0,
+      id_terreno: null,
     },
 
     validationSchema: Yup.object({
@@ -47,7 +47,7 @@ const NuevoPredio = () => {
       ),
     }),
 
-    onSubmit: async (valores) => {
+    onSubmit: async valores => {
       const {
         id_predio,
         nombre_predio,
@@ -67,9 +67,11 @@ const NuevoPredio = () => {
               municipio_predio,
               avaluo_predio,
               id_terreno,
-            },
-          },
+            }
+          }
         });
+
+        
       } catch (error) {
         console.log(error);
       }
@@ -209,7 +211,7 @@ const NuevoPredio = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="avaluo_predio"
-                type="nombre"
+                type="ID"
                 placeholder="avaluo del predio"
                 value={formik.values.avaluo_predio}
                 onChange={formik.handleChange}
