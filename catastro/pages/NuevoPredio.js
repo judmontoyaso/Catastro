@@ -71,14 +71,13 @@ const NuevoPredio = () => {
           }
         });
 
-        
+        console.log(valores);
       } catch (error) {
         console.log(error);
       }
 
       console.log("enviando");
       console.log(valores);
-      console.log(error);
     },
   });
 

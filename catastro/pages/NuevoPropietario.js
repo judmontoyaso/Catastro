@@ -6,15 +6,15 @@ import { gql, useMutation } from "@apollo/client";
 
 const NUEVO_PROPIETARIO = gql`
   mutation Mutation($createPropietarioInput: PropietarioInput) {
-    createPropietario(input: $createPropietarioInput) {
-      id_propietario
-      id_predio
-      direccion_propietario
-      telefono_propietario
-      tipo_propietario
-      correo_propietario
-    }
+  createPropietario(input: $createPropietarioInput) {
+    id_propietario
+    id_predio
+    direccion_propietario
+    telefono_propietario
+    tipo_propietario
+    correo_propietario
   }
+}
 `;
 
 const NuevoPropietario = () => {
@@ -36,11 +36,11 @@ const NuevoPropietario = () => {
     validationSchema: Yup.object({
       id_propietario: Yup.string().required("El id es obligatorio"),
       id_predio: Yup.string().required("El id del predio es obligatorio"),
-      ddireccion_predio: Yup.string().required(
+      direccion_propietario: Yup.string().required(
         "La direccion del propietario  es obligatorio"
       ),
-      telefono_predio: Yup.string().required("El municipio es obligatorio"),
-      tipo_predio: Yup.string().required(
+      telefono_propietario: Yup.string().required("El municipio es obligatorio"),
+      tipo_propietario: Yup.string().required(
         "El telefono del predio es obligatorio"
       ),
     }),
@@ -58,7 +58,7 @@ const NuevoPropietario = () => {
       try {
         const { data } = await createPropietario({
           variables: {
-            input: {
+            createPropietarioInput: {
               id_propietario,
               id_predio,
               direccion_propietario,
@@ -68,6 +68,7 @@ const NuevoPropietario = () => {
             },
           },
         });
+        console.log(valores);
       } catch (error) {
         console.log(error);
       }
@@ -80,7 +81,6 @@ const NuevoPropietario = () => {
   return (
     <Layout>
       <h1 className="text-center text-blackfont-black">
-        {" "}
         Crear Nuevo propietario
       </h1>
 
@@ -155,7 +155,7 @@ const NuevoPropietario = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="direccion_propietario"
                 type="nombre"
-                placeholder="Departamento donde esta el predio"
+                placeholder="Direccion del propietario"
                 value={formik.values.direccion_propietario}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -174,17 +174,16 @@ const NuevoPropietario = () => {
               <label
                 class
                 name="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="telefono_predio"
+                htmlFor="telefono_propietario"
               >
                 Telefono Propietario
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="telefono_predio"
-                type="nombre"
-                placeholder="MTelefono del propietario"
+                id="telefono_propietario"
+                type="number"
+                placeholder="Telefono del propietario"
                 value={formik.values.telefono_propietario}
-                onChange={formik.handleChange}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               ></input>
@@ -198,13 +197,13 @@ const NuevoPropietario = () => {
               </div>
             ) : null}
 
-<div className="mb-4">
+            <div className="mb-4">
               <label
                 class
                 name="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="itipo_propietario"
+                htmlFor="tipo_propietario"
               >
-                 Tipo de propietario
+                Tipo de propietario
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -217,14 +216,13 @@ const NuevoPropietario = () => {
               ></input>
             </div>
 
-            
-            {formik.touched.tipo_propietario && formik.errors.tipo_propietario ? (
+            {formik.touched.tipo_propietario &&
+            formik.errors.tipo_propietario ? (
               <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                 <p className="front-bold">Error</p>
                 <p>{formik.errors.tipo_propietario}</p>
               </div>
             ) : null}
-
 
             <div className="mb-4">
               <label
@@ -245,8 +243,6 @@ const NuevoPropietario = () => {
                 onBlur={formik.handleBlur}
               ></input>
             </div>
-
-          
 
             <input
               type="submit"
