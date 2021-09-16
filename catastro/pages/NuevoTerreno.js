@@ -5,23 +5,23 @@ import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
 
 const NUEVO_TERRENO = gql`
-  mutation Mutation {
-    createTerreno {
-      id_predio
-      id_terreno
-      area_total_terreno
-      valor_comercial_terreno
-      fuente_hidrica_terreno
-      tipo_terreno
-      tiene_construccion_terreno
-    }
+  mutation Mutation($createTerrenoInput: TerrenoInput) {
+  createTerreno(input: $createTerrenoInput) {
+    id_predio
+    id_terreno
+    area_total_terreno
+    valor_comercial_terreno
+    fuente_hidrica_terreno
+    tipo_terreno
+    tiene_construccion_terreno
   }
+}
 `;
 
 const NuevoTerreno = () => {
   //mutacion para crear nuevos terrenos
 
-  const [createTerrenoo] = useMutation(NUEVO_TERRENO);
+  const [createTerreno] = useMutation(NUEVO_TERRENO);
 
   //Validacion de formulario
   const formik = useFormik({
@@ -67,9 +67,9 @@ const NuevoTerreno = () => {
       } = valores;
 
       try {
-        const { data } = await createPredio({
+        const { data } = await createTerreno({
           variables: {
-            input: {
+            createTerrenoInput: {
               id_predio,
               id_terreno,
               area_total_terreno,
@@ -137,7 +137,7 @@ const NuevoTerreno = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="id_terreno"
-                type="nombre"
+                type="ID"
                 placeholder="id del terreno"
                 value={formik.values.id_terreno}
                 onChange={formik.handleChange}
@@ -163,7 +163,7 @@ const NuevoTerreno = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="area_total_terreno"
-                type="nombre"
+                type="number"
                 placeholder="Area total del terreno"
                 value={formik.values.area_total_terreno}
                 onChange={formik.handleChange}
@@ -190,7 +190,7 @@ const NuevoTerreno = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="valor_comercial_terreno"
-                type="nombre"
+                type="number"
                 placeholder="Municipio donde esta el predio"
                 value={formik.values.valor_comercial_terreno}
                 onChange={formik.handleChange}

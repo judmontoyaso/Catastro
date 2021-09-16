@@ -64,9 +64,9 @@ const NuevaConstruccion = () => {
       } = valores;
 
       try {
-        const { data } = await createPredio({
+        const { data } = await createConstruccion({
           variables: {
-            input: {
+            createConstruccionInput: {
               id_predio,
               id_construccion,
               numero_pisos_construccion,
@@ -162,7 +162,7 @@ const NuevaConstruccion = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="numero_pisos_construccion"
-                type="nombre"
+                type="number"
                 placeholder="numero de pisos de la construccion"
                 value={formik.values.numero_pisos_construccion}
                 onChange={formik.handleChange}
@@ -189,7 +189,7 @@ const NuevaConstruccion = () => {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="area_total_construccion"
-                type="nombre"
+                type="number"
                 placeholder="Area total de la construccion"
                 value={formik.values.area_total_construccion}
                 onChange={formik.handleChange}
