@@ -4,6 +4,7 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import Swal from "sweetalert2";
 
+
 const ELIMINAR_TERRENOS = gql`
   mutation Mutation($deleteTerrenoIdTerreno: ID!) {
     deleteTerreno(id_terreno: $deleteTerrenoIdTerreno)
