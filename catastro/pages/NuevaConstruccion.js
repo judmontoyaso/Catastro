@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 
 const NUEVA_CONSTRUCCION = gql`
   mutation Mutation($createConstruccionInput: ConstruccionInput) {
@@ -17,10 +18,41 @@ const NUEVA_CONSTRUCCION = gql`
   }
 `;
 
+const OBTENER_CONSTRUCCIONES = gql`
+  query Query {
+    getConstruccionesDetails {
+      id_predio
+      id_construccion
+      numero_pisos_construccion
+      area_total_construccion
+      direccion_construccion
+    }
+  }
+`;
+
 const NuevaConstruccion = () => {
+
+
+  const router = useRouter();
+
   //mutacion para crear nuevas construcciones
 
-  const [createConstruccion] = useMutation(NUEVA_CONSTRUCCION);
+  const [createConstruccion] = useMutation(NUEVA_CONSTRUCCION, {
+    update(cache, { data: { createConstruccion } }) {
+      //obtener el objeto de cache que se necesita actualizar
+      const { getConstruccionesDetails } = cache.readQuery({
+        query: OBTENER_CONSTRUCCIONES,
+      });
+
+      //Reescribir el cache(el cache es inmutable, no se debe modificar, se debe reescribir)
+      cache.writeQuery({
+        query: OBTENER_CONSTRUCCIONES,
+        data: {
+          getConstruccionesDetails: [...getConstruccionesDetails, createConstruccion],
+        },
+      });
+    },
+  });
 
   //Validacion de formulario
   const formik = useFormik({
@@ -76,6 +108,7 @@ const NuevaConstruccion = () => {
             },
           },
         });
+        router.push("/construcciones");
       } catch (error) {
         console.log(error);
       }
