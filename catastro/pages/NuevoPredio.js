@@ -3,6 +3,8 @@ import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
+import {useRouter} from "next/router";
+import { route } from "next/dist/server/router";
 
 const NUEVO_PREDIO = gql`
   mutation Mutation($createPredioInput: PredioInput) {
@@ -17,10 +19,41 @@ const NUEVO_PREDIO = gql`
   }
 `;
 
+const OBTENER_PREDIOS = gql`
+  query QUERY {
+    getPredioDetails {
+      id_predio
+      nombre_predio
+      departamento_predio
+      municipio_predio
+      avaluo_predio
+      id_terreno
+    }
+  }
+`;
+
 const NuevoPredio = () => {
+  
+  //Router
+
+  const router = useRouter();
+  
   //mutacion para crear nuevos predios
 
-  const [createPredio] = useMutation(NUEVO_PREDIO);
+  const [createPredio] = useMutation(NUEVO_PREDIO, {
+    update(cache, {data: {createPredio}}){
+      //obtener el objeto de cache que se necesita actualizar
+      const{getPredioDetails} = cache.readQuery({query: OBTENER_PREDIOS});
+
+      //Reescribir el cache(el cache es inmutable, no se debe modificar, se debe reescribir)
+      cache.writeQuery({
+        query: OBTENER_PREDIOS,
+        data: {
+          getPredioDetails : [...getPredioDetails, createPredio]
+        }
+      })
+    }
+  });
 
   //Validacion de formulario
   const formik = useFormik({
@@ -70,6 +103,9 @@ const NuevoPredio = () => {
             }
           }
         });
+
+        //redireccionar hacia predios
+        router.push('/')
 
         console.log(valores);
       } catch (error) {
