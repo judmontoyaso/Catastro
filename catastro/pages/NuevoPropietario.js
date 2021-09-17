@@ -3,24 +3,55 @@ import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 
 const NUEVO_PROPIETARIO = gql`
   mutation Mutation($createPropietarioInput: PropietarioInput) {
-  createPropietario(input: $createPropietarioInput) {
-    id_propietario
-    id_predio
-    direccion_propietario
-    telefono_propietario
-    tipo_propietario
-    correo_propietario
+    createPropietario(input: $createPropietarioInput) {
+      id_propietario
+      id_predio
+      direccion_propietario
+      telefono_propietario
+      tipo_propietario
+      correo_propietario
+    }
   }
-}
+`;
+
+const OBTENER_PROPIETARIOS = gql`
+  query Query {
+    getPropietarioDetails {
+      id_propietario
+      id_predio
+      direccion_propietario
+      telefono_propietario
+      tipo_propietario
+      correo_propietario
+    }
+  }
 `;
 
 const NuevoPropietario = () => {
+  const router = useRouter();
+
   //mutacion para crear nuevos predios
 
-  const [createPropietario] = useMutation(NUEVO_PROPIETARIO);
+  const [createPropietario] = useMutation(NUEVO_PROPIETARIO, {
+    update(cache, { data: { createPropietario } }) {
+      //obtener el objeto de cache que se necesita actualizar
+      const { getPropietarioDetails } = cache.readQuery({
+        query: OBTENER_PROPIETARIOS,
+      });
+
+      //Reescribir el cache(el cache es inmutable, no se debe modificar, se debe reescribir)
+      cache.writeQuery({
+        query: OBTENER_PROPIETARIOS,
+        data: {
+          getPropietarioDetails: [...getPropietarioDetails, createPropietario],
+        },
+      });
+    },
+  });
 
   //Validacion de formulario
   const formik = useFormik({
@@ -39,7 +70,9 @@ const NuevoPropietario = () => {
       direccion_propietario: Yup.string().required(
         "La direccion del propietario  es obligatorio"
       ),
-      telefono_propietario: Yup.string().required("El municipio es obligatorio"),
+      telefono_propietario: Yup.string().required(
+        "El municipio es obligatorio"
+      ),
       tipo_propietario: Yup.string().required(
         "El telefono del predio es obligatorio"
       ),
@@ -68,6 +101,8 @@ const NuevoPropietario = () => {
             },
           },
         });
+
+        router.push("/propietarios");
         console.log(valores);
       } catch (error) {
         console.log(error);
