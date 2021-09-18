@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import React from "react";
 import Layout from "../../components/Layout";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, gql, useMutation, fromPromise } from "@apollo/client";
 import { Formik } from "formik";
+import * as Yup from "yup";
 
 const OBTENER_PREDIO = gql`
   query Query($getPredioIdPredio: ID!) {
@@ -32,9 +33,30 @@ const EditarPredio = () => {
       getPredioIdPredio: pid_predio,
     },
   });
-  
+
+  //Schema de validacion
+
+  const schemaValidacion = Yup.object({
+    id_predio: Yup.string().required("El id es obligatorio"),
+    nombre_predio: Yup.string().required("El nombre del predio es obligatorio"),
+    departamento_predio: Yup.string().required(
+      "El departamento  es obligatorio"
+    ),
+    municipio_predio: Yup.string().required("El municipio es obligatorio"),
+    avaluo_predio: Yup.string().required("El nombre del predio es obligatorio"),
+  });
+
+  //cargando para evitar conflictos mientras se hace consulta a la base de datos
 
   if (loading) return "Cargando...";
+
+  //console.log(data.getPredio)
+
+  //
+
+  //definir valores obtenidos
+
+  const { getPredio } = data;
 
   return (
     //Retorna el formulario para editar, se importa el layout
@@ -44,14 +66,27 @@ const EditarPredio = () => {
 
       <div className="flex justify-center mt-5">
         <div className="w-full max-w-lg">
-          <Formik>
+          <Formik
+            //para el schema de validacion con yup
+            validationSchema={schemaValidacion}
+            //para reinicar el formulario con valores inciales del predio a editar
+            enableReinitialize
+            initialValues={getPredio}
+            //para el onsubmit ya que no se tiene hook
+
+            onSubmit={
+              (valores) => {
+                console.log(valores)
+            }
+            }
+          >
             {(props) => {
-              console.log(props);
+              //console.log(props);
 
               return (
                 <form
                   className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
-                  onSubmit={props.handleSubmit} 
+                  onSubmit={props.handleSubmit}
                 >
                   <div className="mb-4">
                     <label
@@ -67,19 +102,19 @@ const EditarPredio = () => {
                       id="id_predio"
                       type="ID"
                       placeholder="ID predio"
-                      // value={formik.values.id_predio}
-                onChange={props.handleChange}
-                onBlur={props.handleBlur} 
+                      value={props.values.id_predio}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
                     ></input>
                   </div>
 
-                  {/*  {formik.touched.id_predio && formik.errors.id_predio ? (
-              <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-                <p className="front-bold">Error</p>
-                <p>{formik.errors.id_predio}</p>
-              </div>
-            ) : null}
- */}
+                  {props.touched.id_predio && props.errors.id_predio ? (
+                    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                      <p className="front-bold">Error</p>
+                      <p>{props.errors.id_predio}</p>
+                    </div>
+                  ) : null}
+
                   <div className="mb-4">
                     <label
                       class
@@ -93,19 +128,19 @@ const EditarPredio = () => {
                       id="nombre_predio"
                       type="nombre"
                       placeholder="Nombre del predio"
-                      // value={formik.values.nombre_predio}
-                onChange={props.handleChange}
-                onBlur={props.handleBlur} 
+                      value={props.values.nombre_predio}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
                     ></input>
                   </div>
 
-                  {/*  {formik.touched.nombre_predio && formik.errors.nombre_predio ? (
-              <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-                <p className="front-bold">Error</p>
-                <p>{formik.errors.nombre_predio}</p>
-              </div>
-            ) : null}
- */}
+                  {props.touched.nombre_predio && props.errors.nombre_predio ? (
+                    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                      <p className="front-bold">Error</p>
+                      <p>{props.errors.nombre_predio}</p>
+                    </div>
+                  ) : null}
+
                   <div className="mb-4">
                     <label
                       class
@@ -119,19 +154,19 @@ const EditarPredio = () => {
                       id="departamento_predio"
                       type="nombre"
                       placeholder="Departamento donde esta el predio"
-                      ///value={formik.values.departamento_predio}
-                onChange={props.handleChange}
-                onBlur={props.handleBlur} 
+                      value={props.values.departamento_predio}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
                     ></input>
                   </div>
 
-                  {/*  {formik.touched.departamento_predio &&
-            formik.errors.departamento_predio ? (
-              <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-                <p className="front-bold">Error</p>
-                <p>{formik.errors.departamento_predio}</p>
-              </div>
-            ) : null} */}
+                  {props.touched.departamento_predio &&
+                  props.errors.departamento_predio ? (
+                    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                      <p className="front-bold">Error</p>
+                      <p>{props.errors.departamento_predio}</p>
+                    </div>
+                  ) : null}
 
                   <div className="mb-4">
                     <label
@@ -146,21 +181,20 @@ const EditarPredio = () => {
                       id="municipio_predio"
                       type="nombre"
                       placeholder="Municipio donde esta el predio"
-                      // value={formik.values.municipio_predio}
-              
-                onChange={props.handleChange}
-                onBlur={props.handleBlur} 
+                      value={props.values.municipio_predio}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
                     ></input>
                   </div>
 
-                  {/*  {formik.touched.municipio_predio &&
-            formik.errors.municipio_predio ? (
-              <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-                <p className="front-bold">Error</p>
-                <p>{formik.errors.municipio_predio}</p>
-              </div>
-            ) : null}
- */}
+                  {props.touched.municipio_predio &&
+                  props.errors.municipio_predio ? (
+                    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                      <p className="front-bold">Error</p>
+                      <p>{props.errors.municipio_predio}</p>
+                    </div>
+                  ) : null}
+
                   <div className="mb-4">
                     <label
                       class
@@ -174,19 +208,18 @@ const EditarPredio = () => {
                       id="avaluo_predio"
                       type="ID"
                       placeholder="avaluo del predio"
-                      // value={formik.values.avaluo_predio}
-                
-                onChange={props.handleChange}
-                onBlur={props.handleBlur} 
+                      value={props.values.avaluo_predio}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
                     ></input>
                   </div>
 
-                  {/* {formik.touched.avaluo_predio && formik.errors.avaluo_predio ? (
-              <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-                <p className="front-bold">Error</p>
-                <p>{formik.errors.avaluo_predio}</p>
-              </div>
-            ) : null} */}
+                  {props.touched.avaluo_predio && props.errors.avaluo_predio ? (
+                    <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                      <p className="front-bold">Error</p>
+                      <p>{props.errors.avaluo_predio}</p>
+                    </div>
+                  ) : null}
 
                   <div className="mb-4">
                     <label
@@ -201,16 +234,16 @@ const EditarPredio = () => {
                       id="id_terreno"
                       type="nombre"
                       placeholder="ID del terreno"
-                      //  value={formik.values.id_terreno}
-                onChange={props.handleChange}
-                onChange={props.handleChange} 
+                      value={props.values.id_terreno}
+                      onChange={props.handleChange}
+                      onChange={props.handleChange}
                     ></input>
                   </div>
 
                   <input
                     type="submit"
                     className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-                    value="Agregar Nuevo Predio"
+                    value="Editar Predio"
                   />
                 </form>
               );

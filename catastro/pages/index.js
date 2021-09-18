@@ -66,7 +66,7 @@ const index = () => {
   //consultar predios
   const { data, loading } = useQuery(OBTENER_PREDIOS);
 
-  //
+  //Cargando es para evitar conflictos mientras se hacen consultas a la base de datos
   if (loading) return "Cargando....";
 
   console.log(loading);
