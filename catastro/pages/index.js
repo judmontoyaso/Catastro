@@ -2,6 +2,9 @@ import Layout from "../components/Layout";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import  Router  from "next/router";
+
+//graphql
 
 const ELIMINAR_PREDIO = gql`
   mutation Mutation($deletePredioIdPredio: ID!) {
@@ -62,11 +65,23 @@ const index = () => {
 
   //consultar predios
   const { data, loading } = useQuery(OBTENER_PREDIOS);
+
+  //
   if (loading) return "Cargando....";
 
   console.log(loading);
 
   console.log(data);
+
+  //funcion Routing para obtener id del predio y editar
+
+  const editarPredio = (id_predio) => {
+    Router.push({
+      pathname:"/editarpredio/[id_predio]",
+      query: { id_predio }
+    })
+  }
+//
 
   return (
     <div>
@@ -77,6 +92,7 @@ const index = () => {
           </h1>
         </section>
         <section className="flex flex-col">
+          {/* boton nuevo predio */}
           <div>
             <Link href="/NuevoPredio">
               <a className="font-bold bg-blue-800  py-2 px-5 mt-5 inline-block text-white rounded text-sm hover:bg-gray-800 mb-3 upper-case font-bold">
@@ -84,6 +100,8 @@ const index = () => {
               </a>
             </Link>
           </div>
+
+          {/* tabla para mostrar datos del query */}
 
           <table className="table-auto shadow-md mt-10 w-full w-lg">
             <thead className="bg-gray-800">
@@ -95,8 +113,11 @@ const index = () => {
                 <th className="w-1/8 py-2">Avaluo </th>
                 <th className="w-1/8 py-2">Terreno </th>
                 <th className="w-1/8 py-2">Eliminar</th>
+                <th className="w-1/8 py-2">Editar</th>
               </tr>
             </thead>
+
+            {/* Iteracion sobre el arreglo  */}
 
             <tbody className="bg-white">
               {data.getPredioDetails.map((predio) => (
@@ -112,10 +133,34 @@ const index = () => {
                   <td className="border px-6 py-2">{predio.avaluo_predio}</td>
                   <td className="border px-6 py-2">{predio.id_terreno}</td>
                   <td className="border px-6 py-2">
+                    {/*  Buton de eliminar predio */}
                     <button
                       type="button"
-                      className="flex justify-center items-center bg-red-800 py-2 px-4  w-full text-white rounded text-xs uppercase font-bold"
+                      className="flex justify-center items-center bg-red-700 py-2 px-4  w-full text-white rounded text-xs uppercase font-bold"
                       onClick={() => confirmarEliminarPredio(predio.id_predio)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td className="border px-6 py-2">
+                    {/*  Buton de editar predio */}
+                    <button
+                      type="button"
+                      className="flex justify-center items-center bg-blue-400 py-2 px-4  w-full text-white rounded text-xs uppercase font-bold"
+                      onClick={() => editarPredio(predio.id_predio)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

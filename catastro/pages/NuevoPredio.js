@@ -6,6 +6,9 @@ import { gql, useMutation } from "@apollo/client";
 import {useRouter} from "next/router";
 import { route } from "next/dist/server/router";
 
+
+//graphql
+
 const NUEVO_PREDIO = gql`
   mutation Mutation($createPredioInput: PredioInput) {
     createPredio(input: $createPredioInput) {
@@ -80,6 +83,7 @@ const NuevoPredio = () => {
       ),
     }),
 
+    //Onsubmit create predio
     onSubmit: async valores => {
       const {
         id_predio,
@@ -118,7 +122,13 @@ const NuevoPredio = () => {
   });
 
   return (
+
+    
     <Layout>
+
+    
+    {/* formulario */}
+    
       <h1 className="text-center text-blackfont-black"> Crear Nuevo predio</h1>
 
       <div className="flex justify-center mt-5">
