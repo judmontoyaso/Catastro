@@ -1,6 +1,19 @@
 import { useRouter } from "next/router";
 import React from "react";
 import Layout from "../../components/Layout";
+import { useQuery, gql, useMutation } from "@apollo/client";
+
+const OBTENER_PREDIO = gql `
+query Query($getPredioIdPredio: ID!) {
+  getPredio(id_predio: $getPredioIdPredio) {
+    id_predio
+    nombre_predio
+    departamento_predio
+    municipio_predio
+    avaluo_predio
+    id_terreno
+  }
+}`
 
 
 const EditarPredio = () => {
@@ -10,7 +23,20 @@ const EditarPredio = () => {
   const {
     query: { pid_predio },
   } = router;
-  console.log(pid_predio);
+  //console.log(pid_predio);
+
+
+// consultar para obtener cliente
+const {data, loading, error} = useQuery(OBTENER_PREDIO, {
+    variables:{
+        getPredioIdPredio : pid_predio
+    }
+});
+
+if (loading) return 'Cargando...';
+
+
+
 
   return (
     //Retorna el formulario para editar, se importa el layout
