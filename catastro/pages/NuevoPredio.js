@@ -3,9 +3,8 @@ import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { route } from "next/dist/server/router";
-
 
 //graphql
 
@@ -36,26 +35,25 @@ const OBTENER_PREDIOS = gql`
 `;
 
 const NuevoPredio = () => {
-  
   //Router
 
   const router = useRouter();
-  
+
   //mutacion para crear nuevos predios
 
   const [createPredio] = useMutation(NUEVO_PREDIO, {
-    update(cache, {data: {createPredio}}){
+    update(cache, { data: { createPredio } }) {
       //obtener el objeto de cache que se necesita actualizar
-      const{getPredioDetails} = cache.readQuery({query: OBTENER_PREDIOS});
+      const { getPredioDetails } = cache.readQuery({ query: OBTENER_PREDIOS });
 
       //Reescribir el cache(el cache es inmutable, no se debe modificar, se debe reescribir)
       cache.writeQuery({
         query: OBTENER_PREDIOS,
         data: {
-          getPredioDetails : [...getPredioDetails, createPredio]
-        }
-      })
-    }
+          getPredioDetails: [...getPredioDetails, createPredio],
+        },
+      });
+    },
   });
 
   //Validacion de formulario
@@ -84,7 +82,7 @@ const NuevoPredio = () => {
     }),
 
     //Onsubmit create predio
-    onSubmit: async valores => {
+    onSubmit: async (valores) => {
       const {
         id_predio,
         nombre_predio,
@@ -104,12 +102,12 @@ const NuevoPredio = () => {
               municipio_predio,
               avaluo_predio,
               id_terreno,
-            }
-          }
+            },
+          },
         });
 
         //redireccionar hacia predios
-        router.push('/')
+        router.push("/");
 
         console.log(valores);
       } catch (error) {
@@ -122,14 +120,10 @@ const NuevoPredio = () => {
   });
 
   return (
-
-    
     <Layout>
+      {/* formulario */}
 
-    
-    {/* formulario */}
-    
-      <h1 className="text-center text-blackfont-black"> Crear Nuevo predio</h1>
+      <h1 className="text-center text-black font-black"> Crear Nuevo predio</h1>
 
       <div className="flex justify-center mt-5">
         <div className="w-full max-w-lg">
